@@ -2,7 +2,8 @@
   "name": "AmplifyPortable",
   "overrideReferences": true,
   "precompiledReferences": [
-    "Newtonsoft.Json.dll"
+    "Newtonsoft.Json.dll",
+    "StackExchange.Redis.dll"
   ],
   "autoReferenced": true
 }
