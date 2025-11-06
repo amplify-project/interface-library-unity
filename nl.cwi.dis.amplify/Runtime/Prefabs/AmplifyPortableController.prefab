@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ce4d3dab3dd4cada6b64145d27816dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedisUrl: redis://localhost:6379
+  redisUrl: localhost
