@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StackExchange.Redis;
-using UnityEngine;
 
 namespace AmplifyPortable.Redis
 {
@@ -10,14 +9,7 @@ namespace AmplifyPortable.Redis
     {
         private readonly ConnectionMultiplexer _connection;
         private ISubscriber _subscriber;
-
         private Dictionary<string, Stream> _streams = new();
-
-        #region events
-
-        public event Action OnConnect;
-
-        #endregion
 
         public bool IsConnected => _connection.IsConnected;
 

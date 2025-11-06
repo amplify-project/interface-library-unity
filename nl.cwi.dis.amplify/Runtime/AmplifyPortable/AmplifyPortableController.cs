@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using AmplifyPortable.Redis;
 
 namespace AmplifyPortable
 {
@@ -6,9 +8,12 @@ namespace AmplifyPortable
     {
         public static AmplifyPortableController Instance { get; private set; }
 
-        public string RedisUrl = "redis://localhost:6379";
+        public string redisUrl = "localhost";
+        public Connection Connection { get; private set; }
 
-        private void Awake()
+        public event Action<Connection> OnConnect;
+
+        private async void Awake()
         {
             if (Instance)
             {
@@ -18,6 +23,9 @@ namespace AmplifyPortable
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            Connection = await Connection.Connect(redisUrl);
+            OnConnect?.Invoke(Connection);
         }
     }
 }
