@@ -82,5 +82,25 @@ namespace AmplifyPortable.Redis
 
             return success;
         }
+
+        public async Task<Dictionary<string, Stream>> GetAvailableStreams()
+        {
+            var streamProperties = await _redis.HashGetAllAsync(ServiceRegistryKey);
+            var streams = new Dictionary<string, Stream>();
+
+            foreach (var streamProperty in streamProperties)
+            {
+                var streamData = JsonConvert.DeserializeObject<SerializedStream>(streamProperty.Value);
+
+                streams.Add(streamProperty.Name, new Stream(
+                    this,
+                    streamData.Name,
+                    new StreamType(streamData.Type),
+                    new StreamDataType(streamData.DataType)
+                ));
+            }
+
+            return streams;
+        }
     }
 }
