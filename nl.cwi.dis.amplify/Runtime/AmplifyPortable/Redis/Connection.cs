@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StackExchange.Redis;
+using Newtonsoft.Json;
+using AmplifyPortable.Util;
 
 namespace AmplifyPortable.Redis
 {
@@ -48,9 +50,23 @@ namespace AmplifyPortable.Redis
             return await _redis.HashExistsAsync(ServiceRegistryKey, streamName);
         }
 
-        public void RegisterStream(string streamName)
+        public async Task<Stream> RegisterStream(string streamName, StreamType streamType, StreamDataType dataType)
         {
-            _registeredStreams.Add(streamName, new Stream(streamName));
+            if (await StreamExists(streamName))
+            {
+                throw new StreamExistsException(streamName);
+            }
+
+            var stream = new Stream(this, streamName, streamType, dataType);
+            var success = await _redis.HashSetAsync(ServiceRegistryKey, streamName, JsonConvert.SerializeObject(stream.Serialize()));
+
+            if (!success)
+            {
+                throw new StreamNotCreatedException(streamName);
+            }
+
+            _registeredStreams.Add(streamName, stream);
+            return stream;
         }
 
         public void UnregisterStream(string streamName)
