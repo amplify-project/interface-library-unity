@@ -29,5 +29,10 @@ namespace AmplifyPortable
             Connection = await Connection.ConnectAsync(redisUrl, connectionType);
             OnConnect?.Invoke(Connection);
         }
+
+        private void OnDestroy()
+        {
+            Connection?.Close();
+        }
     }
 }
