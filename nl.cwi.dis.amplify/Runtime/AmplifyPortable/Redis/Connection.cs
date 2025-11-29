@@ -102,5 +102,18 @@ namespace AmplifyPortable.Redis
 
             return streams;
         }
+
+        public async Task<Stream> GetStream(string streamName)
+        {
+            var streamProperties = await _redis.HashGetAsync(ServiceRegistryKey, streamName);
+
+            if (!streamProperties.HasValue)
+            {
+                throw new StreamNotFoundException(streamName);
+            }
+
+            var streamData = JsonConvert.DeserializeObject<SerializedStream>(streamProperties);
+            return new Stream(this, streamData.Name, new StreamType(streamData.Type), new StreamDataType(streamData.DataType));
+        }
     }
 }

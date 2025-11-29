@@ -11,4 +11,9 @@ namespace AmplifyPortable.Util
     {
         public StreamNotCreatedException(string streamName) : base($"Could not create stream {streamName}.") {}
     }
+
+    public class StreamNotFoundException : Exception
+    {
+        public StreamNotFoundException(string streamName) : base($"Could not find stream {streamName}.") {}
+    }
 }
