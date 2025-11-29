@@ -51,6 +51,7 @@ namespace AmplifyPortable.Redis
         public StreamType Type { get; }
         public StreamDataType DataType { get; }
         public bool IsSubscribed => _callback != null;
+        public bool IsRegistered { get; private set; } = true;
 
         private Connection _connection;
         private Action<RedisChannel, RedisValue> _callback;
@@ -66,6 +67,7 @@ namespace AmplifyPortable.Redis
 
         public async void Publish(object data)
         {
+            if (!IsRegistered) return;
             await _connection.Subscriber.PublishAsync(RedisChannel.Literal(Name), JsonConvert.SerializeObject(data));
         }
 
@@ -83,6 +85,11 @@ namespace AmplifyPortable.Redis
             _callback = null;
 
             return true;
+        }
+
+        public void Unregister()
+        {
+            IsRegistered = false;
         }
 
         public object Serialize()

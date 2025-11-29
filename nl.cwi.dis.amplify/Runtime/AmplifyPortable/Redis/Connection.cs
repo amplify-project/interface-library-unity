@@ -81,10 +81,16 @@ namespace AmplifyPortable.Redis
 
         public async Task<bool> UnregisterStream(string streamName)
         {
+            if (!_registeredStreams.ContainsKey(streamName))
+            {
+                return false;
+            }
+
             var success = await _redis.HashDeleteAsync(ServiceRegistryKey, streamName);
 
             if (success)
             {
+                _registeredStreams[streamName].Unregister();
                 _registeredStreams.Remove(streamName);
             }
 
