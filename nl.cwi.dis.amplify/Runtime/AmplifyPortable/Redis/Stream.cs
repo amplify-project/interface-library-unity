@@ -1,3 +1,6 @@
+using AmplifyPortable.Util;
+using Newtonsoft.Json;
+
 namespace AmplifyPortable.Redis
 {
     public struct StreamType
@@ -31,7 +34,14 @@ namespace AmplifyPortable.Redis
         public override string ToString() => _type;
     }
 
-    public class Stream
+    public class SerializedStream
+    {
+        [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("type")] public string Type { get; set; }
+        [JsonProperty("dataType")] public string DataType { get; set; }
+    }
+
+    public class Stream : IJsonSerializable
     {
         public string Name { get; }
         public StreamType Type { get; }
@@ -46,6 +56,16 @@ namespace AmplifyPortable.Redis
             DataType = dataType;
 
             _connection = connection;
+        }
+
+        public object Serialize()
+        {
+            return new SerializedStream
+            {
+                Name = Name,
+                Type = Type.ToString(),
+                DataType = DataType.ToString()
+            };
         }
     }
 }
