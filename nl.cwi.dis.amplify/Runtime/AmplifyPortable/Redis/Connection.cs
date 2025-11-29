@@ -26,11 +26,13 @@ namespace AmplifyPortable.Redis
         private ConnectionType _connectionType;
 
         public bool IsConnected => _connection.IsConnected;
+        public ISubscriber Subscriber => _subscriber;
 
         private Connection(ConnectionMultiplexer connection, ConnectionType connectionType)
         {
             _connection = connection;
             _redis = connection.GetDatabase();
+            _subscriber = connection.GetSubscriber();
             _connectionType = connectionType;
         }
 
