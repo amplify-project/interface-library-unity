@@ -8,7 +8,9 @@ namespace AmplifyPortable
     {
         public static AmplifyPortableController Instance { get; private set; }
 
-        public string redisUrl = "localhost";
+        public string redisUrl = "localhost:6379";
+        public ConnectionType connectionType = ConnectionType.Input;
+
         public Connection Connection { get; private set; }
 
         public event Action<Connection> OnConnect;
@@ -24,7 +26,7 @@ namespace AmplifyPortable
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            Connection = await Connection.Connect(redisUrl);
+            Connection = await Connection.ConnectAsync(redisUrl, connectionType);
             OnConnect?.Invoke(Connection);
         }
     }
