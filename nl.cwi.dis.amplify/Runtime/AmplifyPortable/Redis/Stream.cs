@@ -4,14 +4,14 @@ using StackExchange.Redis;
 
 namespace AmplifyPortable.Redis
 {
-    public struct StreamType
+    public readonly struct StreamType
     {
         public static readonly StreamType Discrete = new StreamType("discrete");
         public static readonly StreamType Continuous = new StreamType("continuous");
 
         private readonly string _type;
 
-        private StreamType(string type)
+        public StreamType(string type)
         {
             _type = type;
         }
@@ -19,7 +19,7 @@ namespace AmplifyPortable.Redis
         public override string ToString() => _type;
     }
 
-    public struct StreamDataType
+    public readonly struct StreamDataType
     {
         public static readonly StreamDataType Number = new StreamDataType("number");
         public static readonly StreamDataType String = new StreamDataType("string");
@@ -27,7 +27,7 @@ namespace AmplifyPortable.Redis
 
         private readonly string _type;
 
-        private StreamDataType(string type)
+        public StreamDataType(string type)
         {
             _type = type;
         }
