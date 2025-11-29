@@ -77,6 +77,14 @@ namespace AmplifyPortable.Redis
             return true;
         }
 
+        public async Task<bool> Unsubscribe()
+        {
+            await _connection.Subscriber.UnsubscribeAsync(RedisChannel.Literal(Name));
+            _callback = null;
+
+            return true;
+        }
+
         public object Serialize()
         {
             return new SerializedStream
