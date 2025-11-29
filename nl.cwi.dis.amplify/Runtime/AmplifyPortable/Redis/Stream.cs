@@ -34,10 +34,18 @@ namespace AmplifyPortable.Redis
     public class Stream
     {
         public string Name { get; }
+        public StreamType Type { get; }
+        public StreamDataType DataType { get; }
 
-        public Stream(string name)
+        private Connection _connection;
+
+        public Stream(Connection connection, string name, StreamType type, StreamDataType dataType)
         {
             Name = name;
+            Type = type;
+            DataType = dataType;
+
+            _connection = connection;
         }
     }
 }
