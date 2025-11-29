@@ -1,6 +1,8 @@
+using System;
 using AmplifyPortable.Util;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using UnityEditor.UI;
 
 namespace AmplifyPortable.Redis
 {
@@ -47,8 +49,10 @@ namespace AmplifyPortable.Redis
         public string Name { get; }
         public StreamType Type { get; }
         public StreamDataType DataType { get; }
+        public bool IsSubscribed => _callback != null;
 
         private Connection _connection;
+        private Action<RedisChannel, RedisValue> _callback;
 
         public Stream(Connection connection, string name, StreamType type, StreamDataType dataType)
         {
@@ -62,6 +66,13 @@ namespace AmplifyPortable.Redis
         public async void Publish(object data)
         {
             await _connection.Subscriber.PublishAsync(RedisChannel.Literal(Name), JsonConvert.SerializeObject(data));
+        }
+
+        public async void Subscribe(Action<RedisChannel, RedisValue> callback)
+        {
+            _callback = callback;
+
+            await _connection.Subscriber.SubscribeAsync(RedisChannel.Literal(Name), _callback);
         }
 
         public object Serialize()
