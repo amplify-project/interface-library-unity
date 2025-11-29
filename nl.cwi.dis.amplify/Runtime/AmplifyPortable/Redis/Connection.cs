@@ -34,6 +34,11 @@ namespace AmplifyPortable.Redis
             return new Connection(connection, connectionType);
         }
 
+        public void Close()
+        {
+            _connection.Close();
+        }
+
         public void RegisterStream(string streamName)
         {
             _registeredStreams.Add(streamName, new Stream(streamName));
