@@ -27,11 +27,14 @@ namespace AmplifyPortable
             DontDestroyOnLoad(gameObject);
 
             Connection = await Connection.ConnectAsync(redisUrl, connectionType);
+
+            Debug.Log($"Connected to Redis server at {redisUrl}");
             OnConnect?.Invoke(Connection);
         }
 
         private void OnDestroy()
         {
+            Debug.Log($"Closing connection to Redis server at {redisUrl}");
             Connection?.Close();
         }
     }
