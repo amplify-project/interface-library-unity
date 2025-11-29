@@ -83,6 +83,11 @@ namespace AmplifyPortable.Redis
             return success;
         }
 
+        public async Task<bool> UnregisterStream(Stream stream)
+        {
+            return await UnregisterStream(stream.Name);
+        }
+
         public async Task<Dictionary<string, Stream>> GetAvailableStreams()
         {
             var streamProperties = await _redis.HashGetAllAsync(ServiceRegistryKey);
