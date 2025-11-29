@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AmplifyPortable.Util;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -68,11 +69,12 @@ namespace AmplifyPortable.Redis
             await _connection.Subscriber.PublishAsync(RedisChannel.Literal(Name), JsonConvert.SerializeObject(data));
         }
 
-        public async void Subscribe(Action<RedisChannel, RedisValue> callback)
+        public async Task<bool> Subscribe(Action<RedisChannel, RedisValue> callback)
         {
             _callback = callback;
-
             await _connection.Subscriber.SubscribeAsync(RedisChannel.Literal(Name), _callback);
+
+            return true;
         }
 
         public object Serialize()

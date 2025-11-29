@@ -115,5 +115,18 @@ namespace AmplifyPortable.Redis
             var streamData = JsonConvert.DeserializeObject<SerializedStream>(streamProperties);
             return new Stream(this, streamData.Name, new StreamType(streamData.Type), new StreamDataType(streamData.DataType));
         }
+
+        public async Task<bool> SubscribeByName(string streamName, Action<RedisChannel, RedisValue> callback)
+        {
+            try
+            {
+                var stream = await GetStream(streamName);
+                return await stream.Subscribe(callback);
+            }
+            catch (StreamNotFoundException)
+            {
+                return false;
+            }
+        }
     }
 }
