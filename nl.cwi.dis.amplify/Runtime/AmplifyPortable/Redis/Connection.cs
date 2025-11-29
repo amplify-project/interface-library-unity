@@ -17,7 +17,8 @@ namespace AmplifyPortable.Redis
         private const string ServiceRegistryKey = "available_streams";
 
         private readonly ConnectionMultiplexer _connection;
-        private ISubscriber _subscriber;
+        private readonly IDatabase _redis;
+        private readonly ISubscriber _subscriber;
 
         private Dictionary<string, Stream> _registeredStreams = new();
         private ConnectionType _connectionType;
@@ -27,6 +28,7 @@ namespace AmplifyPortable.Redis
         private Connection(ConnectionMultiplexer connection, ConnectionType connectionType)
         {
             _connection = connection;
+            _redis = connection.GetDatabase();
             _connectionType = connectionType;
         }
 
@@ -39,6 +41,11 @@ namespace AmplifyPortable.Redis
         public void Close()
         {
             _connection.Close();
+        }
+
+        public async Task<bool> StreamExists(string streamName)
+        {
+            return await _redis.HashExistsAsync(ServiceRegistryKey, streamName);
         }
 
         public void RegisterStream(string streamName)
