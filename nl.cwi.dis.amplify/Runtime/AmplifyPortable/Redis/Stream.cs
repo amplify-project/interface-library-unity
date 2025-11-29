@@ -1,5 +1,6 @@
 using AmplifyPortable.Util;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace AmplifyPortable.Redis
 {
@@ -56,6 +57,11 @@ namespace AmplifyPortable.Redis
             DataType = dataType;
 
             _connection = connection;
+        }
+
+        public async void Publish(object data)
+        {
+            await _connection.Subscriber.PublishAsync(RedisChannel.Literal(Name), JsonConvert.SerializeObject(data));
         }
 
         public object Serialize()
