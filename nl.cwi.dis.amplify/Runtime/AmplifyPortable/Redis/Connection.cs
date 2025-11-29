@@ -14,6 +14,8 @@ namespace AmplifyPortable.Redis
 
     public class Connection
     {
+        private const string ServiceRegistryKey = "available_streams";
+
         private readonly ConnectionMultiplexer _connection;
         private ISubscriber _subscriber;
 
