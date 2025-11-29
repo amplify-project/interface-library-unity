@@ -42,9 +42,17 @@ namespace AmplifyPortable.Redis
             return new Connection(connection, connectionType);
         }
 
-        public void Close()
+        public async Task<bool> Close()
         {
-            _connection.Close();
+            foreach (var stream in _registeredStreams.Values)
+            {
+                await UnregisterStream(stream);
+            }
+
+            _registeredStreams.Clear();
+            await _connection.CloseAsync();
+
+            return true;
         }
 
         public async Task<bool> StreamExists(string streamName)
