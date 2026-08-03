@@ -29,6 +29,8 @@ namespace AmplifyPortable
         private readonly Task _heartbeatTask;
         private readonly Dictionary<string, Stream> _registeredStreams = new();
 
+        public bool IsConnected => _redis.IsConnected;
+
         public Connection(string host, ConnectionType type, object deviceInfo = null)
         {
             _redis = ConnectionMultiplexer.Connect(host);

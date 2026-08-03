@@ -1,6 +1,5 @@
 using UnityEngine;
 using AmplifyPortable;
-using AmplifyPortable.Redis;
 
 public class AmplifySample : MonoBehaviour
 {
