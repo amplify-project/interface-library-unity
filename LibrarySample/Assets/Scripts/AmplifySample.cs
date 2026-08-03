@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using AmplifyPortable;
 
@@ -34,7 +35,11 @@ public class AmplifySample : MonoBehaviour
 
         _connection.UnregisterStream(_stream);
 
-        _stream.Publish("this message will not arrive");
+        try
+        {
+            _stream.Publish("this message will not arrive");
+        }
+        catch (InvalidOperationException) {}
     }
 
     public void OnDestroy()
