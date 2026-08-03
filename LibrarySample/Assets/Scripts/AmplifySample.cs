@@ -3,6 +3,9 @@ using AmplifyPortable;
 
 public class AmplifySample : MonoBehaviour
 {
+    private Connection _connection;
+    private Stream _stream;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -12,11 +15,12 @@ public class AmplifySample : MonoBehaviour
     private async void OnRedisConnected(Connection connection)
     {
         Debug.Log($"Connected to Redis: {connection.IsConnected}");
+        _connection = connection;
 
-        var stream = await connection.RegisterStream("test", StreamType.Continuous, StreamDataType.Number);
-        await stream.Subscribe((channel, message) => Debug.Log($"Received message on {channel}: {message}"));
+        _stream = connection.RegisterStream("test", StreamType.Continuous, StreamDataType.Number);
+        _stream.Subscribe((message) => Debug.Log($"Received message: {message}"));
 
-        var availableStreams = await connection.GetAvailableStreams();
+        var availableStreams = connection.GetAvailableStreams();
         var log = "Available streams:\n";
 
         foreach (var (k, v) in availableStreams)
@@ -25,11 +29,17 @@ public class AmplifySample : MonoBehaviour
         }
         Debug.Log(log);
 
-        stream.Publish("hello world");
-        stream.Publish("blag");
+        _stream.Publish("hello world");
+        _stream.Publish("blag");
 
-        await connection.UnregisterStream(stream);
+        _connection.UnregisterStream(_stream);
 
-        stream.Publish("this message will not arrive");
+        _stream.Publish("this message will not arrive");
+    }
+
+    public void OnDestroy()
+    {
+        AmplifyPortableController.Instance.OnConnect -= OnRedisConnected;
+        _connection?.Close();
     }
 }
