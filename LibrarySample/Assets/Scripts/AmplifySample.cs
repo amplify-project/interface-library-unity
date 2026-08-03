@@ -39,6 +39,8 @@ public class AmplifySample : MonoBehaviour
 
     public void OnDestroy()
     {
+        Debug.Log("Cleaning up stream and closing connection...");
+        
         AmplifyPortableController.Instance.OnConnect -= OnRedisConnected;
         _connection?.Close();
     }
