@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using StackExchange.Redis;
+using UnityEngine;
 
 namespace AmplifyPortable
 {
@@ -38,7 +39,7 @@ namespace AmplifyPortable
             _deviceId = Guid.NewGuid();
 
             UpdateHeartbeat();
-            _heartbeatTask = RunHeartbeatLoop();
+            RunHeartbeatLoop();
         }
 
         public void Close()
@@ -180,17 +181,19 @@ namespace AmplifyPortable
 
         private async Task RunHeartbeatLoop()
         {
-            using var timer = new System.Threading.PeriodicTimer(TimeSpan.FromSeconds(10));
             try
             {
-                while (await timer.WaitForNextTickAsync(_cts.Token))
+                while (!_cts.IsCancellationRequested)
                 {
+                    await Task.Delay(TimeSpan.FromSeconds(10), _cts.Token);
+
                     var info = new DeviceRegistrationInfo
                     {
                         Type = _type.ToString().ToLower(),
                         DeviceInfo = _deviceInfo,
                         LastSeen = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     };
+
                     await _db.HashSetAsync(DeviceRegistry, _deviceId.ToString(), JsonConvert.SerializeObject(info));
                 }
             }
