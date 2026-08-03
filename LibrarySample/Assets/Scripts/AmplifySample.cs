@@ -12,7 +12,7 @@ public class AmplifySample : MonoBehaviour
         AmplifyPortableController.Instance.OnConnect += OnRedisConnected;
     }
 
-    private async void OnRedisConnected(Connection connection)
+    private void OnRedisConnected(Connection connection)
     {
         Debug.Log($"Connected to Redis: {connection.IsConnected}");
         _connection = connection;
@@ -40,7 +40,7 @@ public class AmplifySample : MonoBehaviour
     public void OnDestroy()
     {
         Debug.Log("Cleaning up stream and closing connection...");
-        
+
         AmplifyPortableController.Instance.OnConnect -= OnRedisConnected;
         _connection?.Close();
     }
