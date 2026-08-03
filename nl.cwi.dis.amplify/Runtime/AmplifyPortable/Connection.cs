@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using StackExchange.Redis;
-using UnityEngine;
 
 namespace AmplifyPortable
 {
@@ -41,7 +40,7 @@ namespace AmplifyPortable
             _deviceId = Guid.NewGuid();
 
             UpdateHeartbeat();
-            RunHeartbeatLoop();
+            _heartbeatTask = RunHeartbeatLoop();
         }
 
         public static async Task<Connection> ConnectAsync(string redisUrl, ConnectionType type = ConnectionType.Input)
@@ -217,7 +216,7 @@ namespace AmplifyPortable
         public string Type { get; set; } = string.Empty;
 
         [JsonProperty("deviceInfo")]
-        public object? DeviceInfo { get; set; }
+        public object DeviceInfo { get; set; }
 
         [JsonProperty("lastSeen")]
         public long LastSeen { get; set; }
