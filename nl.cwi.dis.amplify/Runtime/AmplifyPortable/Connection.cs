@@ -31,9 +31,9 @@ namespace AmplifyPortable
 
         public bool IsConnected => _redis.IsConnected;
 
-        public Connection(string host, ConnectionType type, object deviceInfo = null)
+        private Connection(ConnectionMultiplexer redisConnection, ConnectionType type, object deviceInfo = null)
         {
-            _redis = ConnectionMultiplexer.Connect(host);
+            _redis = redisConnection;
             _db = _redis.GetDatabase();
             _sub = _redis.GetSubscriber();
             _type = type;
@@ -42,6 +42,12 @@ namespace AmplifyPortable
 
             UpdateHeartbeat();
             RunHeartbeatLoop();
+        }
+
+        public static async Task<Connection> ConnectAsync(string redisUrl, ConnectionType type = ConnectionType.Input)
+        {
+            var redisConnection = await ConnectionMultiplexer.ConnectAsync(redisUrl);
+            return new Connection(redisConnection, type);
         }
 
         public void Close()
