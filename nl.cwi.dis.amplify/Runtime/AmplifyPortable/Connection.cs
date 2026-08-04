@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -107,6 +108,11 @@ namespace AmplifyPortable
 
             stream.Unregister();
             return _db.HashDelete(ServiceRegistry, stream.Name);
+        }
+
+        public bool UnregisterAllStreams()
+        {
+            return _registeredStreams.Values.All(UnregisterStream);
         }
 
         public Dictionary<string, Stream> GetAvailableStreams()
