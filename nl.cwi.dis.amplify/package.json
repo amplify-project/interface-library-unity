@@ -1,6 +1,6 @@
 {
   "name" : "nl.cwi.dis.amplify",
-  "version" : "1.0.0",
+  "version" : "1.0.1",
   "displayName" : "AMPLIFY Portable Interface Library",
   "description" : "Library for communicating with other AMPLIFY Portable devices through Redis pub/sub channels",
   "dependencies": {
