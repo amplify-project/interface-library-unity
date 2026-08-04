@@ -28,6 +28,7 @@ namespace AmplifyPortable
         private readonly CancellationTokenSource _cts = new();
         private readonly Task _heartbeatTask;
         private readonly Dictionary<string, Stream> _registeredStreams = new();
+        private bool _disposed;
 
         public bool IsConnected => _redis.IsConnected;
 
@@ -57,13 +58,21 @@ namespace AmplifyPortable
 
         public void Dispose()
         {
-            _cts.Cancel();
+            if (_disposed) return;
+            _disposed = true;
+
+            try
+            {
+                _cts.Cancel();
+            }
+            catch (ObjectDisposedException) { }
 
             try
             {
                 _heartbeatTask.Wait(TimeSpan.FromSeconds(1));
             }
             catch (AggregateException) { }
+            catch (ObjectDisposedException) { }
 
             UnregisterAllStreams();
 
