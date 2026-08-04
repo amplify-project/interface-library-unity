@@ -49,14 +49,14 @@ namespace AmplifyPortable
             _connection.Publish(_name, data);
         }
 
-        public void Subscribe(Action<object> callback)
+        public void Subscribe<T>(Action<T> callback)
         {
             _connection.Subscribe(_name, (channel, value) =>
             {
                 var valueStr = value.ToString();
                 if (valueStr != null)
                 {
-                    var sample = JsonConvert.DeserializeObject<object>(valueStr);
+                    var sample = JsonConvert.DeserializeObject<T>(valueStr);
                     callback(sample);
                 }
             });

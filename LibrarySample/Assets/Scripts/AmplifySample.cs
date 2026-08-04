@@ -19,7 +19,7 @@ public class AmplifySample : MonoBehaviour
         _connection = connection;
 
         _stream = connection.RegisterStream("test", StreamType.Continuous, StreamDataType.Number);
-        _stream.Subscribe((message) => Debug.Log($"Received message: {message}"));
+        _stream.Subscribe<string>((message) => Debug.Log($"Received message: {message}"));
 
         var availableStreams = connection.GetAvailableStreams();
         var log = "Available streams:\n";
