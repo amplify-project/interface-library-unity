@@ -58,20 +58,14 @@ namespace AmplifyPortable
         public void Dispose()
         {
             _cts.Cancel();
+
             try
             {
                 _heartbeatTask.Wait(TimeSpan.FromSeconds(1));
             }
             catch (AggregateException) { }
 
-            foreach (var stream in new List<Stream>(_registeredStreams.Values))
-            {
-                try
-                {
-                    UnregisterStream(stream);
-                }
-                catch { }
-            }
+            UnregisterAllStreams();
 
             try
             {
